@@ -25,14 +25,9 @@
 # Requires:
 #   Nothing
 #
-# Sample Usage:
-#   class { 'sudo': }
-#
-# [Remember: No empty lines between comments and class definition]
+
 class hyrise(
   $ensure = 'present',
-  $hyrise_user = 'hyrise',
-  $hyrise_dir = '~/hyrise',
   $mysql_password = 'hyrise',
 ) {
 
@@ -51,31 +46,13 @@ class hyrise(
   }
 
 
-class { 'hyrise::packages': 
-		hyrise_user => $hyrise_user,
-		package_ensure => $package_ensure,
-		dir_ensure => $dir_ensure,
-		hyrise_dir => $hyrise_dir
-}
-class { 'hyrise::users': 
-		hyrise_user => $hyrise_user,
-		package_ensure => $package_ensure,
-		dir_ensure => $dir_ensure,
-		hyrise_dir => $hyrise_dir
-}
+class { 'hyrise::packages': package_ensure => $package_ensure, }
 
 class { 'mysql': }
 class { 'mysql::server':
   config_hash => { 'root_password' => $mysql_password }
 }
 
-vcsrepo { "$hyrise_dir":
-    ensure => present,
-    provider => git,
-    source => 'https://github.com/hyrise/hyrise.git',
-    user => 'hyrise',
-    require => User['hyrise']
-}
 
 }  
    

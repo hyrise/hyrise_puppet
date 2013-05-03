@@ -2,7 +2,7 @@
 # vi: set ft=ruby :
 
 Vagrant::Config.run do |config|
-  config.vm.box = "quantal64"
+  config.vm.box = "hybox"
   config.vm.share_folder("v-root", "/vagrant", ".", :nfs => true, :nfs_version => 3)
   #config.vm.boot_mode = "gui"
   
@@ -12,10 +12,10 @@ Vagrant::Config.run do |config|
     "--name", "hyrise",
     "--nicspeed1", 1000000,
     "--nicspeed2", 1000000,
-    "--cpus", "2"
+    "--cpus", "6"
   ]
 
-  config.vm.box_url = "https://github.com/downloads/roderik/VagrantQuantal64Box/quantal64.box"
+  config.vm.box_url = "http://upload.devdojo.de/hybox.box"
   config.vm.network :hostonly, "192.168.200.10"
 
   config.vm.provision :puppet do |puppet|

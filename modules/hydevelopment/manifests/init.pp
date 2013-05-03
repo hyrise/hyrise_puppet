@@ -43,10 +43,9 @@ class hydevelopment($hyrise_user) {
                      "valgrind",
                      "tmux",
                      "zsh",
+                     "software-properties-common",
                      ]
 
-
-  
   package { $dependencies: ensure => installed }  
 
   file { "/home/${hyrise_user}/.tmux.conf":
@@ -55,6 +54,12 @@ class hydevelopment($hyrise_user) {
         mode => 644,
         source => 'puppet:///modules/hydevelopment/tmux.conf.erb'
  }
+
+ Package["software-properties-common"] -> exec { "enable repository ppa:ubuntu-toolchain-r/test":
+   command => 'add-apt-repository ppa:ubuntu-toolchain-r/test -y && touch /root/.addedppa && apt-get update',
+   path => '/bin/:/sbin/:/usr/bin/:/usr/local/bin/',
+   creates => '/root/.addedppa',
+ } -> package { ["gcc-4.8", "g++-4.8"] : ensure => installed }
 
   vcsrepo { "/home/$hyrise_user/.oh-my-zsh":
       ensure => present,
@@ -65,25 +70,9 @@ class hydevelopment($hyrise_user) {
   }
 
   User <| title == $hyrise_user |> {
-    shell => '/bin/zsh'
+    
   } 
   
-  exec { "ensureVagrantAuthKeys" :
-   command => "bash -c 'echo 0'",
-   onlyif => "bash -c 'test -f /home/vagrant/.ssh/authorized_keys' ",
-   path => ["/bin/", "/sbin/"],
-  }
-  
-  file { "/home/${hyrise_user}/.ssh":
-    require => User[$hyrise_user],
-    ensure => "directory",
-  } -> file { "/home/$hyrise_user/.ssh/authorized_keys" :
-    source => "/home/vagrant/.ssh/authorized_keys",
-          owner => $hyrise_user,
-          group => $hyrise_user,
-          mode => 644,
-          require => Exec['ensureVagrantAuthKeys'],
-  }   
 
   file { "/home/${hyrise_user}/.zshrc":
           owner => $hyrise_user,
@@ -121,6 +110,29 @@ exec { "install_cpanm":
 	creates => "/var/local/install_cpanm_modules",
         require => Exec["install_cpanm"],
 }
+
+group { $hyrise_user:
+          ensure => present
+}
+
+user { $hyrise_user:
+    ensure            =>  present,
+    gid               =>  $hyrise_user,
+    home              =>  "/home/${hyrise_user}",
+    comment           =>  'Hyrise Development User',
+    managehome        =>  true,
+    require           =>  [ Group[$hyrise_user], Package["zsh"] ],
+    shell => '/bin/zsh',
+}
+
+vcsrepo { "/home/$hyrise_user/hyrise":
+    ensure => present,
+    provider => git,
+    source => 'https://github.com/hyrise/hyrise.git',
+    user => $hyrise_user,
+    require => Package['git'],
+}
+
 
 
 }

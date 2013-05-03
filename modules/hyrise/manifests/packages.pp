@@ -1,4 +1,4 @@
-class hyrise::packages ($hyrise_user, $package_ensure, $dir_ensure, $hyrise_dir) {
+class hyrise::packages ($package_ensure) {
 
     $dependencies = [ 	
                      "curl",
