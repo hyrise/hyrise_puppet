@@ -3,7 +3,7 @@
 
 Vagrant::Config.run do |config|
   config.vm.box = "hybox"
-  config.vm.share_folder("v-root", "/vagrant", ".", :nfs => true, :nfs_version => 3)
+  #config.vm.share_folder("v-root", "/vagrant", ".", :nfs => true, :nfs_version => 3)
   #config.vm.boot_mode = "gui"
   
   config.vm.customize [

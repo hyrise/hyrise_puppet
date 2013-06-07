@@ -44,6 +44,7 @@ class hydevelopment($hyrise_user) {
                      "tmux",
                      "zsh",
                      "software-properties-common",
+                     "clang++"
                      ]
 
   package { $dependencies: ensure => installed }  
