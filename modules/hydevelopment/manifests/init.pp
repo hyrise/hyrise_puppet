@@ -44,7 +44,8 @@ class hydevelopment($hyrise_user) {
                      "tmux",
                      "zsh",
                      "software-properties-common",
-                     "clang++"
+                     "clang-3.2",
+                     "libclang-dev"
                      ]
 
   package { $dependencies: ensure => installed }  
@@ -80,7 +81,8 @@ class hydevelopment($hyrise_user) {
           group => $hyrise_user,
           mode => 644,
           source => 'puppet:///modules/hydevelopment/zshrc.erb',
-          require => Vcsrepo["/home/$hyrise_user/.oh-my-zsh"]
+          require => [Vcsrepo["/home/$hyrise_user/.oh-my-zsh"], Package["zsh"]],
+          replace => false,
   }
 
  vcsrepo { "/home/$hyrise_user/.scm_breeze":
@@ -88,14 +90,17 @@ class hydevelopment($hyrise_user) {
     provider => git,
     source => 'git://github.com/ndbroadbent/scm_breeze.git',
     user => $hyrise_user,
-    require => User[$hyrise_user]
+    require => User[$hyrise_user],
  }
 
  exec { "install_scm_breeze":
-	command => "/home/$hyrise_user/.scm_breeze/install.sh",
-	onlyif => "/bin/grep -q scm_breeze.sh /home/$hyrise_user/.zshrc",
-	require => Vcsrepo["/home/$hyrise_user/.scm_breeze"]
- }
+	command => "/bin/su - $hyrise_user /home/$hyrise_user/.scm_breeze/install.sh",
+	unless => "/bin/grep -q scm_breeze.sh /home/$hyrise_user/.zshrc",
+#        user => $hyrise_user,
+#        group => $hyrise_user,
+         logoutput => 'true',    
+	require => [Vcsrepo["/home/$hyrise_user/.scm_breeze"], File["/home/$hyrise_user/.zshrc"]]
+}            
 
 exec { "install_cpanm":
 	command => "/usr/bin/curl -L http://cpanmin.us | perl - App::cpanminus",
@@ -104,7 +109,7 @@ exec { "install_cpanm":
 	creates => "/usr/local/bin/cpanm",
         require => Package["curl"]
 } 
-  exec { "install_cpanm_modules":
+exec { "install_cpanm_modules":
 	command => "/usr/local/bin/cpanm Term::ANSIColor Getopt::ArgvFile Getopt::Long Regexp::Common && touch /var/local/install_cpanm_modules",
 	cwd => "/root",
 	user => "root",
