@@ -13,6 +13,7 @@ class hyrise::packages ($package_ensure) {
                      "libunwind8-dev",
                      "libunwind8",
                      "libev-dev",
+                     "libtbb-dev",
                      "libboost-all-dev",
                      "binutils-dev",
                      "libgoogle-perftools-dev"
