@@ -8,5 +8,9 @@ HYRISE via puppet with vagrant
     
     # then
     $ vagrant up
-    [...]
+    # [...]
     $ vagrant ssh
+
+    # hyrise source code is shared via directory 
+    #   hyrise/ 
+    # in the vagrant project directory

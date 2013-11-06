@@ -133,6 +133,7 @@ user { $hyrise_user:
 
 vcsrepo { "/home/$hyrise_user/hyrise":
     ensure => present,
+    force => true,
     provider => git,
     source => 'https://github.com/hyrise/hyrise.git',
     user => $hyrise_user,

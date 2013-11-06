@@ -10,8 +10,7 @@ Vagrant.configure("2") do |config|
   config.vm.box = "hybox"
   config.vm.box_url = "http://upload.devdojo.de/hybox.box"
 
-  #config.vm.share_folder("v-root", "/vagrant", ".", :nfs => true, :nfs_version => 3)
-  #config.vm.boot_mode = "gui"
+  config.vm.synced_folder "hyrise/", "/home/vagrant/hyrise"
   
   config.vm.provider :virtualbox do |vb|
     vb.customize [ "modifyvm", :id, "--memory", VM_MEMORY,
