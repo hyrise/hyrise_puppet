@@ -1,2 +1,5 @@
-#vagrant generated files
+# vagrant generated files
 .vagrant
+
+# vm shared folder
+hyrise
