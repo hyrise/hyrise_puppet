@@ -1,10 +1,9 @@
 # -*- mode: ruby -*-
 # vi: set ft=ruby :
 
-# VM hardware settings; override via environment
-#  defaults: VM_CPUS = 6; VM_MEMORY = 4096
-VM_CPUS = (ENV['VM_CPUS'] ? ENV['VM_CPUS'] : "6");
-VM_MEMORY = (ENV['VM_MEMORY'] ? ENV['VM_MEMORY'] : "4096");
+# modify these variables to control the resources allocated to the machine:
+VM_CPUS = "6"
+VM_MEMORY = "4096" # MB
 
 Vagrant.configure("2") do |config|
   config.vm.box = "hybox"
@@ -14,12 +13,13 @@ Vagrant.configure("2") do |config|
   #config.vm.boot_mode = "gui"
   
   config.vm.provider :virtualbox do |vb|
-    vb.customize [ "modifyvm", :id, "--memory", VM_MEMORY,
-    "--name", "hyrise",
-    "--nicspeed1", 1000000,
-    "--nicspeed2", 1000000,
-    "--ioapic", "on",
-    "--cpus", VM_CPUS ]
+    vb.customize [ "modifyvm", :id, 
+      "--memory", VM_MEMORY,
+      "--name", "hyrise",
+      "--nicspeed1", 1000000,
+      "--nicspeed2", 1000000,
+      "--ioapic", "on",
+      "--cpus", VM_CPUS ]
   end
 
   config.vm.provision :shell, :inline => "apt-get update"
