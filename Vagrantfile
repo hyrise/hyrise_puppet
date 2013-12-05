@@ -1,12 +1,14 @@
 # -*- mode: ruby -*-
 # vi: set ft=ruby :
 
+VAGRANTFILE_API_VERSION = "2"
+
 # VM hardware settings; override via environment
 #  defaults: VM_CPUS = 6; VM_MEMORY = 4096
 VM_CPUS = (ENV['VM_CPUS'] ? ENV['VM_CPUS'] : "6");
 VM_MEMORY = (ENV['VM_MEMORY'] ? ENV['VM_MEMORY'] : "4096");
 
-Vagrant.configure("2") do |config|
+Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   config.vm.box = "hybox"
   config.vm.box_url = "http://upload.devdojo.de/hybox.box"
 
