@@ -22,7 +22,7 @@ Vagrant.configure("2") do |config|
   config.vm.network :private_network, ip: "192.168.200.10"
 
   config.vm.provision :shell, :inline => "apt-get update"
-  config.vm.provision :shell, :path => "https://raw2.github.com/bastih/hyrise/feature/new_install/tools/install_ubuntu1310.sh"
+  config.vm.provision :shell, :path => "https://raw2.github.com/hyrise/hyrise/master/tools/install_ubuntu1310.sh"
   config.vm.provision :shell, :inline => "git clone --recursive https://github.com/hyrise/hyrise", :privileged => false
   config.vm.provision :shell, :path => "https://gist.github.com/bastih/8455924/raw/setup.sh", :privileged => false
 end
