@@ -6,13 +6,13 @@ VM_CPUS = "6"
 VM_MEMORY = "4096" # MB
 
 Vagrant.configure("2") do |config|
-  config.vm.box = "hybox"
-  config.vm.box_url = "http://upload.devdojo.de/hybox.box"
+  config.vm.box = "hydev1310"
+  config.vm.box_url = "http://upload.devdojo.de/hydev1310.box"
 
   config.vm.provider :virtualbox do |vb|
     vb.customize [ "modifyvm", :id, 
       "--memory", VM_MEMORY,
-      "--name", "hyrise",
+      "--name", "hyrise2",
       "--nicspeed1", 1000000,
       "--nicspeed2", 1000000,
       "--ioapic", "on",
@@ -22,9 +22,7 @@ Vagrant.configure("2") do |config|
   config.vm.network :private_network, ip: "192.168.200.10"
 
   config.vm.provision :shell, :inline => "apt-get update"
-
-  config.vm.provision :puppet do |puppet|
-    puppet.manifests_path = "manifests"
-    puppet.module_path = "modules"
-  end
+  config.vm.provision :shell, :path => "https://raw2.github.com/bastih/hyrise/feature/new_install/tools/install_ubuntu1310.sh"
+  config.vm.provision :shell, :inline => "git clone --recursive https://github.com/hyrise/hyrise", :privileged => false
+  config.vm.provision :shell, :path => "https://gist.github.com/bastih/8455924/raw/setup.sh", :privileged => false
 end

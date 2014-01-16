@@ -1,12 +1,9 @@
 hyrise_puppet
 =============
 
-HYRISE via puppet with vagrant
+HYRISE-ready development VM via vagrant
     
     # once
-    $ git submodule update --init 
-    
-    # then
     $ vagrant up
     [...]
     $ vagrant ssh
